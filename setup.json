@@ -1,0 +1,8 @@
+{
+    "server": {
+        "domain": "your_domain",
+        "port": "your_port"
+    },
+    "token": "your_token",
+    "command_prefix": "!"
+}
