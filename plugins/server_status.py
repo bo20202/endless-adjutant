@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 from util import byond, setup_file
+from util.checks import server_admin
+
 from multiprocessing import Process
 import asyncio
 
@@ -18,7 +20,8 @@ class ServerStatus:
         await self.bot.say(embed=message)
     
     @commands.command(name='start', pass_context=True)
-    async def shit(self, context):
+    @commands.check(server_admin)
+    async def monitor(self, context):
         if not self.monitoring:
             if context.message.channel.id == "288013065499443200" or context.message.channel.id == "286943853033029632":
                 self.monitoring = True
@@ -28,14 +31,17 @@ class ServerStatus:
     async def start_monitoring(self, context):
         msg = await self.bot.say(embed=self.build_status(self.get_server_info()))
         print('Started monitoring.')
+        await self.bot.say('Started monitoring')
         while self.monitoring:
             new_info = self.build_status(self.get_server_info())
             await self.bot.edit_message(msg, embed=new_info)
             await asyncio.sleep(1)
             
     @commands.command(name='stop')
+    @commands.check(server_admin)
     async def stop_monitoring(self):
         self.monitoring = False
+        await self.bot.say('Stopped monitoring')
         print('Stopped monitoring')
     
     def get_server_info(self):

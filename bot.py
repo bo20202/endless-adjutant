@@ -14,6 +14,9 @@ class Adjutant(commands.Bot):
         print(exception)
         if isinstance(exception, commands.errors.CommandNotFound):
             return
+        if isinstance(exception, commands.errors.CheckFailure):
+            await self.send_message(context.message.channel, "You don't have the required permissions to run this command.")
+            return
         
     def run(self):
         self.load_extension('plugins.server_status')
