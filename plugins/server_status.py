@@ -24,16 +24,15 @@ class ServerStatus:
                 
     
     async def start_monitoring(self, context):
-        messages = {}
         for server in self.servers:
             status = self.build_status(self.get_server_info(server))
             msg = await self.bot.say(embed=status)
-            messages[server] = msg
+            server['message'] = msg
         print('Started monitoring.')
         while self.monitoring:
             for server in self.servers:
                 new_info = self.build_status(self.get_server_info(server))
-                await self.bot.edit_message(messages[server], embed=new_info)
+                await self.bot.edit_message(server['message'], embed=new_info)
             await asyncio.sleep(1)
             
     @commands.command(name='stop')
@@ -46,21 +45,20 @@ class ServerStatus:
     def get_server_info(self, server):
         try:
             status = self.byond.request_topic(server['domain'], server['port'], "status")
-            print(status)
             server_url = self.construct_server_url(server['domain'], server['port'])
-            info = {'players': status['players'], 'round_duration': status["roundduration"], 'admins': status["admins"], 'address': server_url}
+            info = {'players': status['players'], 'round_duration': status["roundduration"], 'server_name': server['name'], 'admins': status["admins"], 'address': server_url}
             
         except discord.HTTPException:
-            info = "Server is offline."
+            info = "{0} is offline.".format(server["name"])
             
         except TypeError:
-            info = "Server is offline"
+            info = "{0} is offline".format(server["name"])
         return info
     
     def build_status(self, info):
         emb = discord.Embed()
         if type(info) is dict:
-            emb.add_field(name='Server status', value='Server is online!', inline=False)
+            emb.add_field(name='Server status', value='{0} is online!'.format(info['server_name']), inline=False)
             emb.add_field(name='Players', value=info["players"])
             emb.add_field(name='Admins', value=info["admins"])
             emb.add_field(name='Server address', value=info['address'], inline=False)
