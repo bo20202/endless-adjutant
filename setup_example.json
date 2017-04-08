@@ -1,0 +1,19 @@
+{
+    "owner_id": "your_id",
+    "servers":[
+        {
+            "domain": "domain1",
+            "port": "2511",
+            "name": "name1"
+        },
+        {
+            "domain": "domain2,
+            "port": "2522",
+            "name": "name2"
+        }
+    ],
+    "token": "token",
+    "command_prefix": "your_command_prefix",
+    "admins": ["admin_id_1", "admin_id_2"],
+    "allowed_channels": ["allowed_channel_id"]
+}
