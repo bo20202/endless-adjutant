@@ -33,7 +33,7 @@ class ServerStatus:
             for server in self.servers:
                 new_info = self.build_status(self.get_server_info(server))
                 await self.bot.edit_message(server['message'], embed=new_info)
-            await asyncio.sleep(1)
+            await asyncio.sleep(5)
             
     @commands.command(name='stop')
     @commands.check(server_admin)
