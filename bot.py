@@ -1,6 +1,18 @@
 import discord
+import logging
+import argparse
 from discord.ext import commands
 from util import setup_file
+
+parser = argparse.ArgumentParser(description='Discord bot parser')
+parser.add_argument('--logging', dest="logging")
+args = parser.parse_args()
+
+logger = logging.getLogger('discord')
+logger.setLevel(logging.INFO)
+handler = logging.FileHandler(filename=args.logging, encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 class Adjutant(commands.Bot):
     def __init__(self):
@@ -23,5 +35,6 @@ class Adjutant(commands.Bot):
         super().run(setup_file['token'])
         
 if __name__ == "__main__":
+
     bot = Adjutant()
     bot.run()
