@@ -28,11 +28,13 @@ class ServerStatus:
             status = self.build_status(self.get_server_info(server))
             msg = await self.bot.say(embed=status)
             server['message'] = msg
+            server['old_status'] = status
         print('Started monitoring.')
         while self.monitoring:
             for server in self.servers:
                 new_info = self.build_status(self.get_server_info(server))
-                await self.bot.edit_message(server['message'], embed=new_info)
+                if(new_info != server['old_status']):
+                    await self.bot.edit_message(server['message'], embed=new_info)
             await asyncio.sleep(5)
             
     @commands.command(name='stop')
